@@ -1,0 +1,44 @@
+Financial Chatbot Documentation
+
+Overview:
+This is a simple web-based financial chatbot that can answer predefined queries about financial data. The chatbot uses a Flask backend and provides a clean, modern web interface for user interaction.
+
+Features:
+- Web-based interface with real-time chat functionality
+- Predefined financial queries and responses
+- Simple and intuitive user interface
+- Responsive design that works on both desktop and mobile devices
+
+Predefined Queries:
+1. "What is the total revenue?"
+2. "How has net income changed over the last year?"
+3. "What are the main expenses?"
+4. "What is the profit margin?"
+5. "What is the cash flow situation?"
+
+Setup Instructions:
+1. Create and activate virtual environment:
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+2. Install dependencies:
+   pip install -r requirements.txt
+
+3. Run the application:
+   python app.py
+
+4. Access the chatbot:
+   Open a web browser and navigate to http://localhost:5000
+
+Limitations:
+- The chatbot can only respond to predefined queries
+- Responses are static and don't reflect real-time data
+- No natural language processing capabilities
+- Limited to basic financial metrics
+
+Future Improvements:
+- Integration with real financial data sources
+- Implementation of natural language processing
+- Addition of more complex financial queries
+- Support for data visualization
+- User authentication and personalized responses 
