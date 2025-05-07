@@ -10,11 +10,11 @@ Features:
 - Responsive design that works on both desktop and mobile devices
 
 Predefined Queries:
-1. "What is the total revenue?"
-2. "How has net income changed over the last year?"
-3. "What are the main expenses?"
-4. "What is the profit margin?"
-5. "What is the cash flow situation?"
+1. What is the total revenue of Apple in year 2023?
+2. How has the net income of Microsoft changed over the last year?
+3. What would be the financial summary of Tesla over the past 3 years?
+4. What is the cash flow situation of Tesla?
+5. What is the Debt to Asset ratio analysis of Apple?
 
 Setup Instructions:
 1. Create and activate virtual environment:
