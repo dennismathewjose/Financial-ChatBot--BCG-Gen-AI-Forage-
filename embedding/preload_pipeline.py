@@ -21,15 +21,15 @@ def process_company(ticker, form_types=["10-K"], after_date="2022-01-01"):
         print(f"✔️ Found {len(files)} files for {ticker}")
 
         for file_path in files:
-            print(f"📄 Reading: {file_path}")
+            print(f"Reading: {file_path}")
             year = file_path.split("/")[-2].split("-")[1][:4]
 
             with open(file_path, "r", encoding="utf-8") as f:
                 raw_text = f.read()
-            print(f"🧼 Raw length: {len(raw_text)}")
+            print(f"Raw length: {len(raw_text)}")
 
             cleaned = clean_text(raw_text)
-            print(f"✅ Cleaned length: {len(cleaned)}")
+            print(f"Cleaned length: {len(cleaned)}")
 
             for i, chunk in enumerate(simple_chunk(cleaned)):
                 print(f"🔹 Chunk {i} - {len(chunk)} words")
@@ -57,4 +57,4 @@ if __name__ == "__main__":
             for item in tqdm(process_company(ticker), desc=f"Processing {ticker}"):
                 f.write(json.dumps(item) + "\n")
                 count += 1
-        print(f"✅Done: {ticker} → {count} chunks written to {output_path}")
+        print(f"Done: {ticker} → {count} chunks written to {output_path}")
