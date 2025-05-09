@@ -3,6 +3,6 @@ flask==3.0.0
 python-dotenv==1.0.0 
 sec-edgar-downloader==5.0.3
 pytest
-beautifulSoup
+beautifulsoup4
 tqdm
 
