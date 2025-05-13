@@ -2,18 +2,23 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from embedding.cleaner import clean_text
-from embedding.preload_pipeline import simple_chunk
+from backend.summarizer import is_valid_content, clean_summary_output
+from backend.retriever import retrieve_relevant_chunks
 
-def test_clean_text_removes_html():
-    raw = "<html><body><p>Page 1 of 20</p>This is financial data</body></html>"
-    cleaned = clean_text(raw)
-    assert "<" not in cleaned
-    assert "Page" not in cleaned
-    assert "financial data" in cleaned
+def test_is_valid_content():
+    assert is_valid_content("Apple had a total revenue of $394 billion.") is True
+    assert is_valid_content("   ") is False
+    assert is_valid_content("n/a") is False
+    assert is_valid_content("N/A") is False
 
-def test_chunking_works():
-    sample = "This is a test sentence. " * 100  # ~600 words
-    chunks = list(simple_chunk(sample, chunk_size=100))
-    assert len(chunks) > 1
-    assert all(isinstance(c, str) for c in chunks)
+def test_clean_summary_output_formatting():
+    raw = "Apple earned 394billionin2023 and paid 5.2millionininterest."
+    cleaned = clean_summary_output(raw)
+    assert "394 billion" in cleaned or "394billion" in cleaned  # depending on LLM output
+    assert "5.2 million" in cleaned
+
+def test_retrieve_chunks_returns_data():
+    chunks = retrieve_relevant_chunks("What are the risks for Apple?", top_k=1)
+    assert isinstance(chunks, list)
+    assert len(chunks) > 0
+    assert "section" in chunks[0]

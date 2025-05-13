@@ -1,8 +1,26 @@
-pandas==2.0.3
-flask==3.0.0
-python-dotenv==1.0.0 
-sec-edgar-downloader==5.0.3
-pytest
-beautifulsoup4
-tqdm
+# Core
+streamlit
+openai
+python-dotenv
+requests
 
+# Crawling
+crawl4ai
+
+# Vector DB
+pinecone
+
+# Embeddings
+sentence-transformers
+
+# Data processing
+beautifulsoup4
+html5lib
+nltk
+
+# Plotting (optional)
+matplotlib
+plotly
+
+# Development
+tqdm
