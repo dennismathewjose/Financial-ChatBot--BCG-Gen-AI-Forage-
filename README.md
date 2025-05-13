@@ -1,125 +1,136 @@
-# Financial-ChatBot – BCG GenAI Forage
+# SEC Financial Chatbot
 
-## Overview
-
-The GenAI Consulting team at BCG has partnered with Global Finance Corp. (GFC), a leading global financial institution, to develop an AI-powered chatbot that transforms how corporate financial performance is analyzed and consumed.
-
-In an era of growing data volumes and rapidly changing markets, GFC seeks to modernize its financial analysis process by replacing traditional, time-intensive workflows with a scalable, intelligent, and interactive solution powered by Generative AI and Natural Language Processing (NLP).
+A full-stack AI-powered chatbot to query and summarize financial data from SEC 10-K filings, using Ollama for embeddings, Groq LLaMA-3 for summarization, and Pinecone for semantic search.
 
 ---
 
-## Project Objective
+## Features Implemented
 
-The primary goal is to build a conversational AI tool that:
-
-- Analyzes and interprets financial data from 10-K and 10-Q filings
-- Provides summarized insights into corporate financial health
-- Offers a natural, intuitive interface for GFC’s clients—regardless of financial expertise
-
-This tool is expected to enhance decision-making, boost productivity, and accelerate financial analysis.
-
----
-
-## Chatbot Features
-
-- Web-based interface with real-time chat functionality
-- Clean, modern, and responsive design (works on both desktop and mobile)
-- Predefined queries and financial responses
-- Simple and intuitive user experience
+### Core Capabilities
+- **Natural language question answering** on financial filings
+- **Semantic chunking** of SEC 10-K HTML files using section and subsection boundaries
+- **Embedding-based retrieval** with `nomic-embed-text` via Ollama
+- **RAG-based summarization** using `llama3-8b-8192` via Groq API
+- **Fallback mechanism** if chunk content is missing or invalid
+- **Streamlit web UI** for interactive Q&A
+- **Auto-cleanup of summary formatting**, especially around financial figures
 
 ---
 
-## Predefined Queries (Sample)
+## Tech Stack
 
-1. What is the total revenue of Apple in year 2023?
-2. How has the net income of Microsoft changed over the last year?
-3. What would be the financial summary of Tesla over the past 3 years?
-4. What is the cash flow situation of Tesla?
-5. What is the Debt to Asset ratio analysis of Apple?
-
----
-
-## Data Extraction
-
-The chatbot relies on manually curated data extracted from SEC EDGAR 10-K filings for Apple, Tesla, and Microsoft over the past three fiscal years.
-
-Key financial metrics collected:
-
-- Total Revenue
-- Net Income
-- Total Assets
-- Total Liabilities
-- Cash Flow from Operating Activities
+| Component         | Tool/Library                              |
+|------------------|--------------------------------------------|
+| Embeddings       | [Ollama](https://ollama.com) (`nomic-embed-text`) |
+| Vector DB        | [Pinecone](https://www.pinecone.io/)       |
+| LLM Summarizer   | [Groq](https://console.groq.com/) (`llama3-8b-8192`) |
+| Web UI           | [Streamlit](https://streamlit.io/)         |
+| SEC Crawler      | [Crawl4AI](https://github.com/unclecode/crawl4ai) |
+| Data Processing  | BeautifulSoup, Regex, NLTK                 |
+| Testing & CI     | Pytest + GitHub Actions                    |
 
 ---
 
-## Data Analysis
+## Project Structure
+financial-chatbot/
+├── app/ # Streamlit UI
+│ └── app.py
+├── backend/ # LLM + Retrieval logic
+│ ├── retriever.py
+│ ├── summarizer.py
+│ ├── fallback_scraper.py
+├── crawler/ # Crawler + Chunk formatter
+│ ├── crawler.py
+│ └── chunk_formatter.py
+├── embedding/ # Embedding logic
+│ ├── embedder.py
+│ └── pinecone_client.py
+├── utils/
+│ └── config.py
+├── data/ # Processed/Raw Filing Data
+│ ├── raw/
+│ └── chunks/
+├── tests/ # Unit tests
+│ └── test_pipeline.py
+├── .env # API keys (not committed)
+├── requirements.txt
+├── Dockerfile (optional)
+└── README.md
 
-Performed year-over-year trend analysis and financial health evaluation using:
-
-- Revenue and Net Income Growth (%)
-- Debt-to-Asset Ratio
-- Cash Flow Margin
-- Net Profit Margin
-
-The data was then structured for use within the chatbot's response logic.
-
----
-
-## Data Preparation
-
-- Cleaned and formatted data for integration
-- Ensured consistency in naming, units, and structure
-- Prepared the dataset for chatbot consumption
-
----
-
-## Technologies Used
-
-- Python (Pandas, NumPy, Matplotlib, Seaborn)
-- Flask (Backend for chatbot interface)
-- HTML/CSS/JavaScript (Web frontend)
 
 ---
 
 ## Setup Instructions
 
-1. **Create and activate virtual environment:**
+### 1. Clone the Repository
 
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+```bash
+git clone https://github.com/your-username/financial-chatbot.git
+cd financial-chatbot
+```
 
-2. Install the dependencies:
-``` bash   
+### 2. Create virtual environment
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-3. Run the application:
+### 4. Set up Environment Variables
+Create a .env file in the root directory and add the following:
 ```bash
-python app.py
+PINECONE_API_KEY=your_pinecone_key
+PINECONE_INDEX_NAME=financial-chatbot
+OLLAMA_BASE_URL=http://localhost:11434
+GROQ_API_KEY=your_groq_api_key
 ```
-4. Access the chatbot:
+--
+## How to run the pipeline
+
+### 1. Start ollama locally
 ```bash
-Open a browser and navigate to http://localhost:5000
+ollama run nomic-embed-text
 ```
-## Current Limitations
-- Chatbot only supports a fixed set of predefined queries
-- Responses are static (not connected to live financial data)
-- Lacks dynamic natural language understanding
-- Limited scope of financial metrics and no user personalization
 
-## Upcoming Improvements
-- Integration with real-time financial APIs or document parsers
-- Implementation of NLP to support open-ended queries
-- Expansion to support broader financial KPIs and company coverage
-- Visual responses (e.g., charts and graphs)
-- User authentication and personalized financial dashboards
+### 2. Crawl and download the SEC 10-K HTML
+```bash
+python crawler/crawler.py
+```
 
-## Authors
-BCG GenAI Consulting Team – Forage Virtual Internship
-- [Dennis Mathew Jose](https://www.linkedin.com/in/dennismjose/)
+### 3. Format and chunk the HTML
+```bash
+python crawler/chunk_formatter.py
+```
 
-## License
-This project is developed as part of an academic and exploratory initiative. No commercial license is attached.
+### 4. Embed and upload to pinecone
+```bash
+python -m embedding.embedder
+```
 
+# 5. Launch the streamlit chatbot
+```bash
+streamlit run app/app.py
+```
+--
+
+## Example queries
+
+1. What are Apple’s international market risks?
+
+2. Summarize Apple’s liquidity and cash flow position.
+
+3. What is the total revenue in 2023?
+
+4. Give me the capital expenditures in the last year.
+--
+## Known Limitations
+- Summarization may occasionally misinterpret table structure
+
+- Some fallback extractions may produce repeated values
+
+- Groq API key must be valid and have usage access
