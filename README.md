@@ -31,35 +31,6 @@ A full-stack AI-powered chatbot to query and summarize financial data from SEC 1
 
 ---
 
-## Project Structure
-financial-chatbot/
-├── app/ # Streamlit UI
-│ └── app.py
-├── backend/ # LLM + Retrieval logic
-│ ├── retriever.py
-│ ├── summarizer.py
-│ ├── fallback_scraper.py
-├── crawler/ # Crawler + Chunk formatter
-│ ├── crawler.py
-│ └── chunk_formatter.py
-├── embedding/ # Embedding logic
-│ ├── embedder.py
-│ └── pinecone_client.py
-├── utils/
-│ └── config.py
-├── data/ # Processed/Raw Filing Data
-│ ├── raw/
-│ └── chunks/
-├── tests/ # Unit tests
-│ └── test_pipeline.py
-├── .env # API keys (not committed)
-├── requirements.txt
-├── Dockerfile (optional)
-└── README.md
-
-
----
-
 ## Setup Instructions
 
 ### 1. Clone the Repository
@@ -89,7 +60,7 @@ PINECONE_INDEX_NAME=financial-chatbot
 OLLAMA_BASE_URL=http://localhost:11434
 GROQ_API_KEY=your_groq_api_key
 ```
---
+---
 ## How to run the pipeline
 
 ### 1. Start ollama locally
@@ -112,25 +83,20 @@ python crawler/chunk_formatter.py
 python -m embedding.embedder
 ```
 
-# 5. Launch the streamlit chatbot
+### 5. Launch the streamlit chatbot
 ```bash
 streamlit run app/app.py
 ```
---
+---
 
 ## Example queries
 
 1. What are Apple’s international market risks?
-
 2. Summarize Apple’s liquidity and cash flow position.
-
 3. What is the total revenue in 2023?
-
 4. Give me the capital expenditures in the last year.
---
+---
 ## Known Limitations
 - Summarization may occasionally misinterpret table structure
-
 - Some fallback extractions may produce repeated values
-
 - Groq API key must be valid and have usage access
