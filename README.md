@@ -100,3 +100,10 @@ streamlit run app/app.py
 - Summarization may occasionally misinterpret table structure
 - Some fallback extractions may produce repeated values
 - Groq API key must be valid and have usage access
+
+---
+## Upcomng features
+- Financial metric visualization from structured summaries
+- Support for multi-filing and year-to-year comparisons
+- Advanced query filtering and topic-level summaries
+- Export reports as PDF/CSV
