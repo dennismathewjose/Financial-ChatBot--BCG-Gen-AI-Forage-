@@ -3,7 +3,6 @@ import requests
 from dotenv import load_dotenv
 from embedding.pinecone_client import init_pinecone
 
-
 load_dotenv()
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
@@ -21,7 +20,17 @@ def embed_query(query: str):
     return response.json()["embedding"]
 
 def retrieve_relevant_chunks(query: str, top_k=5, namespace=""):
-    """Query Pinecone and retrieve top-k most relevant chunks"""
+    """
+    Query Pinecone to retrieve the top-k most relevant chunks for a given query.
+
+    Args:
+        query (str): User query
+        top_k (int): Number of top matches to retrieve
+        namespace (str): Company ticker (e.g., AAPL, MSFT, AMZN) used for multi-filing isolation
+
+    Returns:
+        List[Dict]: Matched chunk metadata and content
+    """
     index = init_pinecone()
     query_embedding = embed_query(query)
 
@@ -29,7 +38,7 @@ def retrieve_relevant_chunks(query: str, top_k=5, namespace=""):
         vector=query_embedding,
         top_k=top_k,
         include_metadata=True,
-        namespace=namespace
+        namespace=namespace or ""  # fallback to global space
     )
 
     results = []
@@ -51,8 +60,9 @@ def retrieve_relevant_chunks(query: str, top_k=5, namespace=""):
     return results
 
 if __name__ == "__main__":
-    query = "What are Apple's risks related to international operations?"
-    chunks = retrieve_relevant_chunks(query)
+    # Local testing
+    query = "What are the risks related to international operations?"
+    chunks = retrieve_relevant_chunks(query, top_k=3, namespace="AMZN")
 
     if not chunks:
         print("No relevant chunks found.")
@@ -61,5 +71,4 @@ if __name__ == "__main__":
             print(f"\nChunk {i} (Score: {chunk['score']:.4f})")
             print(f"Section: {chunk['section']} - {chunk.get('subsection', 'N/A')}")
             print(f"Tags: {chunk.get('tags', [])}")
-            snippet = chunk.get("content") or "N/A"
-            print(f"Content Snippet: {snippet[:300]}...")
+            print(f"Content Snippet: {chunk.get('content', '')[:300]}...")
