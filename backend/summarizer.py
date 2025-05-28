@@ -11,9 +11,12 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_MODEL = "llama3-8b-8192"
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
-def is_valid_content(text: str) -> bool:
-    """Check if content is valid for summarization."""
-    return bool(text and text.strip() and text.strip().lower() != "n/a" and len(text.strip()) > 100)
+def is_valid_content(content: str) -> bool:
+    if not isinstance(content, str):
+        return False
+    stripped = content.strip().lower()
+    return bool(stripped and stripped != "n/a")
+
 
 def summarize_text(text: str, query: str = "") -> str:
     """Summarize text using Groq LLM."""

@@ -24,3 +24,6 @@ plotly
 
 # Development
 tqdm
+
+pytest
+python-dotenv
