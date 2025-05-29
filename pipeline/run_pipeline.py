@@ -1,5 +1,5 @@
-# pipeline/run_pipeline.py
 import subprocess
+import concurrent.futures
 
 def run_step(command):
     print(f"Running: {command}")
@@ -7,11 +7,29 @@ def run_step(command):
     if result.returncode != 0:
         raise RuntimeError(f"Step failed: {command}")
 
-if __name__ == "__main__":
+def run_pipeline():
     print("Starting full ingestion pipeline...")
 
+    # Step 1: Crawl
     run_step("python crawler/crawler.py")
-    run_step("python crawler/chunk_formatter.py")
-    run_step("python -m embedding.embedder")  # safer with -m for relative imports
 
-    print("Pipeline complete.")
+    # Step 2: Run chunking and xbrl in parallel
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [
+            executor.submit(run_step, "python crawler/chunk_formatter.py"),
+            executor.submit(run_step, "python metrics/xbrl_financial_metrics.py")
+        ]
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                future.result()
+            except Exception as e:
+                print(f"Error: {e}")
+                raise
+
+    # Step 3: Embedding
+    run_step("python -m embedding.embedder")
+
+    print("Pipeline completed successfully.")
+
+if __name__ == "__main__":
+    run_pipeline()

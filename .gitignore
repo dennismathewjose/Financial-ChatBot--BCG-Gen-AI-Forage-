@@ -18,6 +18,8 @@ preloaded_embeddings/
 # Environment variables
 .env
 
+#files
+*.csv
 
 # OS
 .DS_Store

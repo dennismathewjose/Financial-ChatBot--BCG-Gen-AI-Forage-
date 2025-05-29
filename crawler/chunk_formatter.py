@@ -105,5 +105,5 @@ def process_all_filings():
     print(f"Saved to {CHUNK_SAVE_PATH}")
 
 if __name__ == "__main__":
-    print("🔍 Extracting from all filings...")
+    print("Extracting from all filings...")
     process_all_filings()
