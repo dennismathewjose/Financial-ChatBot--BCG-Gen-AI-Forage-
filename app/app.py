@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from backend.retriever import retrieve_relevant_chunks
 from backend.summarizer import summarize_text, summarize_with_fallback, clean_summary_output
+from backend.graph_generator import load_metrics, plot_metric_trend, plot_metric_comparison
 
 st.set_page_config(page_title="SEC Financial Chatbot", layout="wide")
 st.title("SEC Financial Chatbot")
@@ -56,3 +57,24 @@ if query:
             except Exception as e:
                 st.error("Failed to summarize due to API error.")
                 st.code(traceback.format_exc())
+# Load metrics CSV once
+metrics_df = load_metrics()
+
+#Visualization Section
+
+# Let user pick metric to visualize
+metric_options = metrics_df["metric"].unique().tolist()
+selected_metric = st.selectbox("Select a metric:", metric_options)
+
+# Create two columns side by side
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("### Company Trend")
+    fig1 = plot_metric_trend(metrics_df, selected_ticker, selected_metric)
+    st.plotly_chart(fig1, use_container_width=True)
+
+with col2:
+    st.markdown("### Cross-Company Comparison")
+    fig2 = plot_metric_comparison(metrics_df, selected_metric)
+    st.plotly_chart(fig2, use_container_width=True)
