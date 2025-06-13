@@ -71,7 +71,7 @@ st.subheader("Financial Metrics Visualization")
 # Selection box with "All" option
 selected_metric = st.selectbox("Select a metric (leave empty to show all):", ["All"] + metric_options)
 
-# Helper function to choose chart type (you can tweak this)
+# Helper function to choose chart type
 def choose_chart_type(metric_name):
     if "Revenue" in metric_name:
         return "line"
@@ -89,7 +89,7 @@ def choose_chart_type(metric_name):
 if selected_metric == "All":
     st.write("Showing all available metrics across companies...")
     
-    # Display 2 charts per row
+    # Displaying 2 charts per row
     metrics_to_plot = metric_options
     num_cols = 2
     rows = (len(metrics_to_plot) + num_cols - 1) // num_cols
@@ -113,7 +113,7 @@ if selected_metric == "All":
 else:
     st.markdown(f"### Showing '{selected_metric}' for {selected_company}")
     
-    # Show 2 columns (company trend + cross-company)
+    # (company trend + cross-company Analysis)
     col1, col2 = st.columns(2)
 
     with col1:
